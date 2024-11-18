@@ -1,4 +1,5 @@
 import math,random
+import pygame
 
 """
 This was adapted from a GeeksforGeeks article "Program for Sudoku Generator" by Aarti_Rathi and Ankur Trisal
@@ -209,3 +210,37 @@ def generate_sudoku(size, removed):
     sudoku.remove_cells()
     board = sudoku.get_board()
     return board
+
+class Cell:
+    def __init__(self, value, row, col, screen):
+        self.value = value
+        self.row = row
+        self.col = col
+        self.screen = screen
+    def set_cell_value(self, value):
+        self.value = value
+    def set_sketched_value(self, value):
+        self.value = value
+        # not sure if this should be the same as set_cell_value or not
+    def draw(self):
+        # draw the cell & value inside it
+            # if the cell is nonzero, display the value; otherwise no value displayed
+            # if the cell is currently selected, outline it in red
+        pass
+
+class Board:
+    def __init__(self, width, height, screen, difficulty):
+        self.width = width
+        self.height = height
+        self.screen = screen
+        self.difficulty = difficulty
+    def draw(self):
+        for i in range(1, self.height):
+            # draw vertical lines, with the lines bordering boxes being bold
+            pygame.draw.line(self.screen, 000000, (0, i * 210), (630, i * 210), 1)
+            pass
+        for i in range(1, self.width):
+            # draw horizontal lines, with the lines bordering boxes being bold
+            pygame.draw.line(self.screen, 000000, (i * 210, 0), (i * 210, 630), 1)
+            pass
+        # also draw each cell
