@@ -24,7 +24,10 @@ class SudokuGenerator:
 	None
     '''
     def __init__(self, row_length, removed_cells):
-        pass
+        self.row_length = row_length
+        self.removed_cells = removed_cells
+        self.board = Board(self.row_length, self.row_length, screen=pygame.display.set_mode((630, 630)), difficulty="medium")
+        self.box_length = row_length ** 0.5
 
     '''
 	Returns a 2D python list of numbers which represents the board
@@ -234,13 +237,46 @@ class Board:
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
+        self.boardList = [["-" for i in range(width)] for j in range(height)]
+
     def draw(self):
         for i in range(1, self.height):
             # draw vertical lines, with the lines bordering boxes being bold
-            pygame.draw.line(self.screen, 000000, (0, i * 210), (630, i * 210), 1)
+            pygame.draw.line(self.screen, 000000, (0, i * 70), (630, i * 70), 1)
             pass
         for i in range(1, self.width):
             # draw horizontal lines, with the lines bordering boxes being bold
-            pygame.draw.line(self.screen, 000000, (i * 210, 0), (i * 210, 630), 1)
+            pygame.draw.line(self.screen, 000000, (i * 70, 0), (i * 70, 630), 1)
             pass
         # also draw each cell
+
+    def select(self, row, col):
+        currentCell = (row, col)
+        # highlight currentCell as on the board and make it so user can edit its value/sketched value
+
+    def click(self, row, col):
+        pass
+
+    def clear(self):
+        pass
+
+    def sketch(self, value):
+        pass
+
+    def place_number(self, value):
+        pass
+
+    def reset_to_original(self):
+        pass
+
+    def is_full(self):
+        pass
+
+    def update_board(self):
+        pass
+
+    def find_empty(self):
+        pass
+
+    def check_board(self):
+        pass
