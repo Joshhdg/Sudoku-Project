@@ -26,7 +26,7 @@ class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
         self.row_length = row_length
         self.removed_cells = removed_cells
-        self.board = Board(self.row_length, self.row_length, screen=pygame.display.set_mode((630, 630)), difficulty="medium")
+        self.board = [["-" for i in range(row_length)] for j in range(row_length)]
         self.box_length = row_length ** 0.5
 
     '''
@@ -35,8 +35,8 @@ class SudokuGenerator:
 	Parameters: None
 	Return: list[list]
     '''
-    def get_board(self):
-        pass
+    def get_board(self):    # havent tested
+        return self.board
 
     '''
 	Displays the board to the console
@@ -45,8 +45,9 @@ class SudokuGenerator:
 	Parameters: None
 	Return: None
     '''
-    def print_board(self):
-        pass
+    def print_board(self):  # havent tested
+        for row in self.board:
+            print(row)
 
     '''
 	Determines if num is contained in the specified row (horizontal) of the board
@@ -58,8 +59,11 @@ class SudokuGenerator:
 	
 	Return: boolean
     '''
-    def valid_in_row(self, row, num):
-        pass
+    def valid_in_row(self, row, num):   # havent tested
+        for col in self.board[row]:
+            if col == num:
+                return False
+        return True
 
     '''
 	Determines if num is contained in the specified column (vertical) of the board
@@ -71,8 +75,11 @@ class SudokuGenerator:
 	
 	Return: boolean
     '''
-    def valid_in_col(self, col, num):
-        pass
+    def valid_in_col(self, col, num):   # havent tested
+        for row in self.board:
+            if row[col] == num:
+                return False
+        return True
 
     '''
 	Determines if num is contained in the 3x3 box specified on the board
@@ -86,8 +93,12 @@ class SudokuGenerator:
 
 	Return: boolean
     '''
-    def valid_in_box(self, row_start, col_start, num):
-        pass
+    def valid_in_box(self, row_start, col_start, num):          # havent tested
+        for row in self.board[row_start:row_start+2]:
+            for col in row[col_start:col_start+2]:
+                if col == num:
+                    return False
+        return True
     
     '''
     Determines if it is valid to enter num at (row, col) in the board
@@ -99,8 +110,25 @@ class SudokuGenerator:
 
 	Return: boolean
     '''
-    def is_valid(self, row, col, num):
-        pass
+    def is_valid(self, row, col, num):      # havent tested
+        if self.valid_in_row(row, num):
+            if self.valid_in_col(col, num):
+                # Checks what row to start at for self.valid_in_box
+                if row >= 6:
+                    startRow = 6
+                elif row >= 3:
+                    startRow = 3
+                else: startRow = 0
+                # Checks what column to start at for self.valid_in_box
+                if col >= 6:
+                    startCol = 6
+                elif col >= 3:
+                    startCol = 3
+                else: startCol = 0
+                # Plug those into self.valid_in_box
+                if self.valid_in_box(startRow, startCol, num):
+                    return True
+        return False
 
     '''
     Fills the specified 3x3 box with values
@@ -112,8 +140,16 @@ class SudokuGenerator:
 
 	Return: None
     '''
-    def fill_box(self, row_start, col_start):
-        pass
+    def fill_box(self, row_start, col_start):   # havent tested
+        currentRow = row_start -1
+        for row in self.board[row_start:row_start + 2]:
+            currentRow += 1
+            currentCol = col_start -1
+            for col in row[col_start:col_start + 2]:
+                currentCol += 1
+                newDigit = random.randrange(1,10)
+                if self.is_valid(row, col, newDigit):
+                    self.board[currentRow][currentCol] = newDigit   # fix this later
     
     '''
     Fills the three boxes along the main diagonal of the board
@@ -237,7 +273,6 @@ class Board:
         self.height = height
         self.screen = screen
         self.difficulty = difficulty
-        self.boardList = [["-" for i in range(width)] for j in range(height)]
 
     def draw(self):
         for i in range(1, self.height):

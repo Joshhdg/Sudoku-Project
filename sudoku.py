@@ -15,7 +15,7 @@ difficulty = None
 game_over = False
 winner = 0
 
-def draw_title_screen():    # work in progress
+def draw_title_screen():    # still have to add text for each button
     screen.fill("white")
     title_text = "Welcome to Sudoku game name here!"
     title_surf = title_font.render(title_text, 1, "black")
@@ -47,7 +47,6 @@ while True:
             pygame.quit()
         if event.type == pygame.MOUSEBUTTONDOWN and title_screen:
             x, y = event.pos()
-
         if event.type == pygame.MOUSEBUTTONDOWN and game_over:
             game_over = False
         if event.type == pygame.MOUSEBUTTONDOWN and not title_screen and not game_over:
