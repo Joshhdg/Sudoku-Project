@@ -26,7 +26,7 @@ class SudokuGenerator:
     def __init__(self, row_length, removed_cells):
         self.row_length = row_length
         self.removed_cells = removed_cells
-        self.board = [["-" for i in range(row_length)] for j in range(row_length)]
+        self.board = [[0] * row_length for j in range(row_length)]
         self.box_length = row_length ** 0.5
 
     '''
@@ -149,7 +149,8 @@ class SudokuGenerator:
                 currentCol += 1
                 newDigit = random.randrange(1,10)
                 if self.is_valid(row, col, newDigit):
-                    self.board[currentRow][currentCol] = newDigit   # fix this later
+                    self.board[currentRow][currentCol] = newDigit
+
     
     '''
     Fills the three boxes along the main diagonal of the board
@@ -158,8 +159,9 @@ class SudokuGenerator:
 	Parameters: None
 	Return: None
     '''
-    def fill_diagonal(self):
-        pass
+    def fill_diagonal(self):        # havent tested
+        for row in self.board[0:10:3]:
+            self.board[row][row] = random.randrange(1,10)
 
     '''
     DO NOT CHANGE
@@ -225,7 +227,8 @@ class SudokuGenerator:
 	Return: None
     '''
     def remove_cells(self):
-        pass
+        for i in range(self.removed_cells):
+            pass        # unfinished
 
 '''
 DO NOT CHANGE
