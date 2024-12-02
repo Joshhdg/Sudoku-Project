@@ -3,7 +3,7 @@ from sudoku_generator import *
 
 pygame.init()
 screen = pygame.display.set_mode((630, 630))
-pygame.display.set_caption("sudoku game name here")
+pygame.display.set_caption("Sudoku")
 clock = pygame.time.Clock()
 
 game_font = pygame.font.Font(None, 20)
@@ -56,6 +56,43 @@ def draw_game_over():   # work in progress
 
 screen.fill("white")
 
+
+def draw_board():
+    screen.fill("light blue")
+    for i in range(1, 9):
+        pygame.draw.line(
+            screen,
+            "aquamarine4",
+            (0, i * (630 / 9)),
+            (630, i * (630/9)),
+            2
+        )
+        pygame.draw.line(
+            screen,
+            "aquamarine4",
+            (i * (630 / 9), 0),
+            (i * (630 / 9), 630),
+            2
+        )
+        for i in range(1, 9):
+            if i % 3 == 0:
+                pygame.draw.line(screen,
+                "deepskyblue4",
+                (0, i * (630 / 9)),
+                (630, i * (630/9)),
+                5)
+            if i % 3 == 0:
+                pygame.draw.line(
+                    screen,
+                    "deepskyblue4",
+                    (i * (630 / 9), 0),
+                    (i * (630 / 9), 630),
+                    5
+                )
+
+
+
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -65,11 +102,16 @@ while True:
             if 450 < y < 490:
                 if 90 < x < 190:
                     print("easy")
+                    difficulty = "easy"
+                    title_screen = False
                 if 270 < x < 370:
                     print("med")
-
+                    difficulty = "medium"
+                    title_screen = False
                 if 450 < x < 550:
                     print("hard")
+                    difficulty = "hard"
+                    title_screen = False
 
         if event.type == pygame.MOUSEBUTTONDOWN and game_over:
             game_over = False
@@ -78,6 +120,8 @@ while True:
             col, row = x//70, y//70
     if title_screen:
         draw_title_screen()
+    else:
+        draw_board()
     if game_over:
         draw_game_over()
     pygame.display.flip()
