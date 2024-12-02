@@ -118,6 +118,7 @@ while True:
         if event.type == pygame.MOUSEBUTTONDOWN and not title_screen and not game_over:
             x, y = event.pos
             col, row = x//70, y//70
+            print(col, row)
     if title_screen:
         draw_title_screen()
     else:
