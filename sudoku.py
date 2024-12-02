@@ -1,12 +1,16 @@
 import pygame
+from select import select
+
 from sudoku_generator import *
 
 pygame.init()
 screen = pygame.display.set_mode((630, 630))
 pygame.display.set_caption("Sudoku")
 clock = pygame.time.Clock()
-
+selection = None
 game_font = pygame.font.Font(None, 20)
+number_font = pygame.font.Font(None, 35)
+
 title_font = pygame.font.Font(None, 50)
 subtitle_font = pygame.font.Font(None, 40)
 
@@ -89,8 +93,8 @@ def draw_board():
                     (i * (630 / 9), 630),
                     5
                 )
-
-
+        c, r = selection
+        screen.blit(selectionImage, (c * 70, r * 70))
 
 
 while True:
@@ -103,14 +107,20 @@ while True:
                 if 90 < x < 190:
                     print("easy")
                     difficulty = "easy"
+                    board = generate_sudoku(9, 30)
+
                     title_screen = False
                 if 270 < x < 370:
                     print("med")
                     difficulty = "medium"
+                    board = generate_sudoku(9, 40)
+
                     title_screen = False
                 if 450 < x < 550:
                     print("hard")
                     difficulty = "hard"
+                    board = generate_sudoku(9, 50)
+
                     title_screen = False
 
         if event.type == pygame.MOUSEBUTTONDOWN and game_over:
@@ -119,10 +129,28 @@ while True:
             x, y = event.pos
             col, row = x//70, y//70
             print(col, row)
+            selectionImage = pygame.image.load("./images/selectionBox.png").convert_alpha()
+            selectionImage = pygame.transform.scale(selectionImage, (70, 70))
+            selection = (col, row)
+
+        if event.type == pygame.KEYDOWN and not title_screen and not game_over and selection is not None:
+            if event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or event.key == pygame.K_4 or event.key == pygame.K_5 or event.key == pygame.K_6 or event.key == pygame.K_7 or event.key == pygame.K_8 or event.key == pygame.K_9:
+                col, row = selection
+                if board[col][row] == 0:
+                    board[col][row] = event.key - 48
+
     if title_screen:
         draw_title_screen()
     else:
+
         draw_board()
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] != 0:
+                    number_text = f"{board[i][j]}"
+                    number_surf = number_font.render(number_text, 1, "black")
+                    number_rect = number_surf.get_rect(center=(35 + (70* i - 1), 35 + (70* j - 1)))
+                    screen.blit(number_surf, number_rect)
     if game_over:
         draw_game_over()
     pygame.display.flip()
