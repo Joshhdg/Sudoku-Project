@@ -58,6 +58,12 @@ def draw_game_over():   # work in progress
     title_rect = title_surf.get_rect(center=(630//2, 200))
     screen.blit(title_surf, title_rect)
 
+    #restart function
+    restart_text = "Click to Restart"
+    restart_s = game_font.render(restart_text,1,(255,255,255))
+    restart_r = restart_s.get_rect(center =(630//2,300))
+    screen.blit(restart_s,restart_r)
+
 screen.fill("white")
 
 
@@ -96,6 +102,24 @@ def draw_board():
         c, r = selection
         screen.blit(selectionImage, (c * 70, r * 70))
 
+def check_win(board):
+    for r in board:
+        if sorted(r) != list(range(1,10)):
+            return False
+    for c in range(9):
+        column = [board[r][c] for r in range(9)]
+        if sorted(column) != list(range(1,10)):
+            return False
+
+    for i in range(0,9,3):
+        for j in range(0,9,3):
+            sub = []
+            for x in range(3):
+                for y in range(3):
+                    sub.append(board[i+x][j+y])
+            if sorted(sub) != list(range(1,10)):
+                return False
+    return True
 
 while True:
     for event in pygame.event.get():
@@ -108,23 +132,32 @@ while True:
                     print("easy")
                     difficulty = "easy"
                     board = generate_sudoku(9, 30)
-
+                    solution = generate_sudoku(9,30)
                     title_screen = False
+
                 if 270 < x < 370:
                     print("med")
                     difficulty = "medium"
                     board = generate_sudoku(9, 40)
+                    solution = generate_sudoku(9,40)
 
                     title_screen = False
                 if 450 < x < 550:
                     print("hard")
                     difficulty = "hard"
                     board = generate_sudoku(9, 50)
+                    solution = generate_sudoku(9,50)
 
                     title_screen = False
 
         if event.type == pygame.MOUSEBUTTONDOWN and game_over:
             game_over = False
+            title_screen = True
+            winner = 0
+            difficulty = None
+            board = None
+            solution = None
+
         if event.type == pygame.MOUSEBUTTONDOWN and not title_screen and not game_over:
             x, y = event.pos
             col, row = x//70, y//70
@@ -151,6 +184,11 @@ while True:
                     number_surf = number_font.render(number_text, 1, "black")
                     number_rect = number_surf.get_rect(center=(35 + (70* i - 1), 35 + (70* j - 1)))
                     screen.blit(number_surf, number_rect)
+
+        if check_win(board):
+            game_over = True
+            winner = 1
+
     if game_over:
         draw_game_over()
     pygame.display.flip()
