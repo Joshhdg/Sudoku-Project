@@ -4,7 +4,7 @@ from select import select
 from sudoku_generator import *
 
 pygame.init()
-screen = pygame.display.set_mode((630, 630))
+screen = pygame.display.set_mode((630, 730))
 pygame.display.set_caption("Sudoku")
 clock = pygame.time.Clock()
 selection = None
@@ -84,7 +84,7 @@ def draw_board():
             (i * (630 / 9), 630),
             2
         )
-        for i in range(1, 9):
+        for i in range(1, 12):
             if i % 3 == 0:
                 pygame.draw.line(screen,
                 "deepskyblue4",
@@ -101,6 +101,22 @@ def draw_board():
                 )
         c, r = selection
         screen.blit(selectionImage, (c * 70, r * 70))
+        pygame.draw.rect(screen, "forest green", pygame.Rect(90, 660, 100, 40))
+        pygame.draw.rect(screen, "forest green", pygame.Rect(270, 660, 100, 40))
+        pygame.draw.rect(screen, "forest green", pygame.Rect(450, 660, 100, 40))
+        difficulty_text = "Reset"
+        difficulty_surf = game_font.render(difficulty_text, 1, "black")
+        difficulty_rect = difficulty_surf.get_rect(center=(90 + 50, 660 + 20))
+        screen.blit(difficulty_surf, difficulty_rect)
+        difficulty_text = "Restart"
+        difficulty_surf = game_font.render(difficulty_text, 1, "black")
+        difficulty_rect = difficulty_surf.get_rect(center=(270 + 50, 660 + 20))
+        screen.blit(difficulty_surf, difficulty_rect)
+        difficulty_text = "Exit"
+        difficulty_surf = game_font.render(difficulty_text, 1, "black")
+        difficulty_rect = difficulty_surf.get_rect(center=(450 + 50, 660 + 20))
+        screen.blit(difficulty_surf, difficulty_rect)
+
 
 def check_win(board):
     for r in board:
@@ -133,18 +149,23 @@ while True:
                     difficulty = "easy"
                     board, solution, reference = generate_sudoku(9, 30)
                     title_screen = False
+                    original_reference = copy.deepcopy(reference)
 
                 if 270 < x < 370:
                     print("med")
                     difficulty = "medium"
                     board, solution, reference = generate_sudoku(9, 40)
                     title_screen = False
+                    original_reference = copy.deepcopy(reference)
+
 
                 if 450 < x < 550:
                     print("hard")
                     difficulty = "hard"
                     board, solution, reference = generate_sudoku(9, 50)
                     title_screen = False
+                    original_reference = copy.deepcopy(reference)
+
 
 
         if event.type == pygame.MOUSEBUTTONDOWN and game_over:
@@ -157,12 +178,29 @@ while True:
 
         if event.type == pygame.MOUSEBUTTONDOWN and not title_screen and not game_over:
             x, y = event.pos
-            col, row = x//70, y//70
-            print(col, row)
-            selectionImage = pygame.image.load("./images/selectionBox.png").convert_alpha()
-            selectionImage = pygame.transform.scale(selectionImage, (70, 70))
-            selection = (col, row)
+            if y < 631:
+                col, row = x//70, y//70
+                print(col, row)
+                selectionImage = pygame.image.load("./images/selectionBox.png").convert_alpha()
+                selectionImage = pygame.transform.scale(selectionImage, (70, 70))
+                selection = (col, row)
+            if 660 < y < 700:
+                if 90 < x < 190:
+                    print("reset")
+                    board = copy.deepcopy(original_reference)
+                    print(board)
+                    print(reference)
 
+                if 270 < x < 370:
+                    print("restart")
+                    title_screen = True
+                    print(board)
+                    print(reference)
+
+                if 450 < x < 550:
+                    print("exit")
+                    pygame.quit()
+                    quit()
         if event.type == pygame.KEYDOWN and not title_screen and not game_over and selection is not None:
             if event.key == pygame.K_1 or event.key == pygame.K_2 or event.key == pygame.K_3 or event.key == pygame.K_4 or event.key == pygame.K_5 or event.key == pygame.K_6 or event.key == pygame.K_7 or event.key == pygame.K_8 or event.key == pygame.K_9:
                 col, row = selection
@@ -201,7 +239,7 @@ while True:
                 else:
                     if board[i][j] != 0:
                         number_text = f"{board[i][j]}"
-                        number_surf = number_font.render(number_text, 1, "grey")
+                        number_surf = number_font.render(number_text, 1, "dark grey")
                         number_rect = number_surf.get_rect(center=(35 + (70 * i - 1), 35 + (70 * j - 1)))
                         screen.blit(number_surf, number_rect)
 
