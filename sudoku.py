@@ -131,24 +131,21 @@ while True:
                 if 90 < x < 190:
                     print("easy")
                     difficulty = "easy"
-                    board = generate_sudoku(9, 30)
-                    solution = generate_sudoku(9,30)
+                    board, solution, reference = generate_sudoku(9, 30)
                     title_screen = False
 
                 if 270 < x < 370:
                     print("med")
                     difficulty = "medium"
-                    board = generate_sudoku(9, 40)
-                    solution = generate_sudoku(9,40)
-
+                    board, solution, reference = generate_sudoku(9, 40)
                     title_screen = False
+
                 if 450 < x < 550:
                     print("hard")
                     difficulty = "hard"
-                    board = generate_sudoku(9, 50)
-                    solution = generate_sudoku(9,50)
-
+                    board, solution, reference = generate_sudoku(9, 50)
                     title_screen = False
+
 
         if event.type == pygame.MOUSEBUTTONDOWN and game_over:
             game_over = False
@@ -172,18 +169,41 @@ while True:
                 if board[col][row] == 0:
                     board[col][row] = event.key - 48
 
+
+            if event.key == pygame.K_BACKSPACE or event.key == pygame.K_DELETE:
+                col, row = selection
+                if board[col][row] == reference[col][row]:
+                    pass
+                else:
+                    if board[col][row] != 0:
+                        board[col][row] = 0
+
+
+            if event.key == pygame.K_RETURN:
+                col, row = selection
+                if board[col][row] != 0:
+                    reference[col][row] = board[col][row]
+
+
     if title_screen:
         draw_title_screen()
-    else:
 
+    else:
         draw_board()
         for i in range(9):
             for j in range(9):
-                if board[i][j] != 0:
-                    number_text = f"{board[i][j]}"
-                    number_surf = number_font.render(number_text, 1, "black")
-                    number_rect = number_surf.get_rect(center=(35 + (70* i - 1), 35 + (70* j - 1)))
-                    screen.blit(number_surf, number_rect)
+                if reference[i][j] == board[i][j]:
+                    if board[i][j] != 0:
+                        number_text = f"{board[i][j]}"
+                        number_surf = number_font.render(number_text, 1, "black")
+                        number_rect = number_surf.get_rect(center=(35 + (70 * i - 1), 35 + (70 * j - 1)))
+                        screen.blit(number_surf, number_rect)
+                else:
+                    if board[i][j] != 0:
+                        number_text = f"{board[i][j]}"
+                        number_surf = number_font.render(number_text, 1, "grey")
+                        number_rect = number_surf.get_rect(center=(35 + (70 * i - 1), 35 + (70 * j - 1)))
+                        screen.blit(number_surf, number_rect)
 
         if check_win(board):
             game_over = True
