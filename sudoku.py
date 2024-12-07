@@ -49,22 +49,21 @@ def draw_title_screen():    # still have to add text for each button
     screen.blit(img, (225, 150))
 
 def draw_game_over():   # work in progress
-    screen.fill("white")
+    screen.fill("light blue")
     if winner != 0:
-        title_text = "Game Won!"
+        text = "Game Won!"
     else:
-        title_text = "Game Over :("
-    title_surf = title_font.render(title_text, 1, (255, 255, 255))
-    title_rect = title_surf.get_rect(center=(630//2, 200))
-    screen.blit(title_surf, title_rect)
+        text = "Game Over"
+    text_surf = title_font.render(text, 1, "black")
+    text_rect = text_surf.get_rect(center=(630//2, 200))
+    screen.blit(text_surf, text_rect)
 
     #restart function
     restart_text = "Click to Restart"
-    restart_s = game_font.render(restart_text,1,(255,255,255))
+    restart_s = game_font.render(restart_text, 1, "black")
     restart_r = restart_s.get_rect(center =(630//2,300))
     screen.blit(restart_s,restart_r)
 
-screen.fill("white")
 
 
 def draw_board():
@@ -188,14 +187,15 @@ while True:
                 if 90 < x < 190:
                     print("reset")
                     board = copy.deepcopy(original_reference)
-                    print(board)
-                    print(reference)
 
                 if 270 < x < 370:
                     print("restart")
+                    game_over = False
                     title_screen = True
-                    print(board)
-                    print(reference)
+                    winner = 0
+                    difficulty = None
+                    board = None
+                    solution = None
 
                 if 450 < x < 550:
                     print("exit")
@@ -249,5 +249,6 @@ while True:
 
     if game_over:
         draw_game_over()
+
     pygame.display.flip()
     clock.tick(60)
